@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServPET</title>
+
+<link rel="stylesheet" href="/css/pg/addPgSvcItem.css">
+
+</head>
+<body>
+	<header>
+		<h1>servPet管理後台</h1>
+		<nav>
+			<ul>
+				<li><a href="#" th:href="@{/}">首頁</a></li>
+				<li><a href="#" th:href="@{/pg}">寵物美容師</a></li>
+				<li><a href="#" th:href="@{/pg/listRealAllPgSvcItem}">美容師服務項目管理</a></li>
+				<li><a href="#" th:href="@{/}">登出</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+
+		<div class="view">
+			<!-- 返回按鈕 -->
+			<div class="return-button">
+				<a th:href="@{/pg/listRealAllPgSvcItem}"> 
+				<img th:src="@{/images/heart.png}">
+				</a>
+
+			</div>
+
+
+			<div>
+				<!-- 新增服務項目表單 -->
+		
+					<form th:action="@{/pg/createPgSvcItem}" method="post" th:object="${pgSvcItemVO}" class="form-container">
+
+					<!-- 服務項目名稱 -->
+					<label for="svcName">服務項目名稱:</label> 
+					<input type="text" id="svcName" th:field="*{svcName}" placeholder="輸入服務項目名稱" required>
+					<!-- 服務項目描述 -->
+					<label for="svcDescr">服務項目描述:</label>
+					 <textarea id="svcDescr" th:field="*{svcDescr}" placeholder="輸入服務項目描述" rows="4" required></textarea>
+
+
+					<!-- 送出按鈕 -->
+					<button type="submit">新增</button>
+				</form>
+			</div>
+
+	
+
+		</div>
+
+	</main>
+
+	<footer>
+		<p>Copyright &copy; 2024 ServPET 寵寵唯蹟 All Rights Reserved.</p>
+	</footer>
+
+</body>
+</html>

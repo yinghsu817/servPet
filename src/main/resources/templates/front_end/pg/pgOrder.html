@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServPET</title>
+
+<link rel="stylesheet" href="/css/pg/pgOrder.css">
+
+</head>
+<body>
+	<header>
+		<h1>servPet</h1>
+		<nav>
+			<ul>
+				<li><a href="#" th:href="@{/}">首頁</a></li>
+				<li><a href="#" th:href="@{/pg}">寵物美容師</a></li>
+				<li><a href="#" th:href="@{/}">登出</a></li>
+			</ul>
+		</nav>
+	</header>
+
+	<main>
+		<section class="search"></section>
+		<div class="view">
+
+			<!-- 返回按鈕 -->
+			<div class="return-button">
+				<a href="javascript:history.back()"> <img
+					th:src="@{/images/girlpet.png}">
+				</a>
+
+			</div>
+
+
+			<div class="form-container">
+
+				<form th:action="@{/pg/createOrder}" th:method="post">
+					<!-- 				<input type="hidden" name="pgId" th:value="${pg.pgId}" />  -->
+
+					<!-- 美容師編號 -->
+					<label for="pgId">美容師編號:</label> 
+					<input type="text" id="pgId" name="pgId" th:value="${pg.pgId}" readonly>
+
+					<!-- 會員編號 -->
+					<label for="mebId">會員編號:</label> 
+					<input type="text" id="mebId" name="mebId" th:value="${member.mebId}" readonly>
+					
+					<!-- 會員編號 -->
+					<label for="mebName">會員姓名:</label> 
+					<input type="text" id="mebName" name="mebName" th:value="${member.mebName}" readonly>
+					
+					
+<!-- 					<input type="text" id="mebId" -->
+<!-- 						name="mebId" th:value="${mebVO.mebId}" readonly> -->
+
+
+					<!-- 寵物編號 -->
+					<label for="petId">寵物:</label> 
+					<select id="pet" name="petId">
+			        <option th:each="pets : ${pets}" th:value="${pets.petId}" th:text="${pets.petName}"></option>
+			    	</select>
+
+					<!-- 預約日期 -->
+					<label for="bookingDate">預約日期:</label> <input type="date"
+						id="bookingDate" name="bookingDate" th:value="${bookingDate}"
+						readonly>
+
+					<!-- 預約時段 -->
+					<label for="bookingTime">預約時段:</label>
+					<select id="bookingTime" name="bookingTime" disabled>
+					    <option value="0" th:selected="${bookingTime == '0'}">早上</option>
+					    <option value="1" th:selected="${bookingTime == '1'}">中午</option>
+					    <option value="2" th:selected="${bookingTime == '2'}">晚上</option>
+					</select>
+					
+					<!-- 隱藏的 input 保留選擇的值 -->
+					<input type="hidden" id="hiddenBookingTime" name="bookingTime" th:value="${bookingTime}" />
+							
+						
+					<label for="service">選擇服務</label> 
+					<select id="service" name="pgSvcId" onchange="updatePrice()" >
+					<option th:each="service : ${services}" th:value="${service.pgSvcId}" 
+					th:data-price="${service.svcPrice}"
+					th:text="${service.svcName + ' - ' + service.svcType + ' - NT$ ' + service.svcPrice}"></option>
+					</select>
+
+					<!-- 顯示總金額和儲值金餘額 -->
+					<label for="svcPrice">服務項目金額:</label> 
+					<input type="text" id="svcPrice" name="svcPrice" readonly placeholder="金額會自動顯示">
+<!-- 					<input type="text" id="svcPrice" name="svcPrice" th:value="${service.svcPrice}" readonly> -->
+
+					
+					<label for="balance">儲值金餘額</label>
+    				<input type="text" id="balance" th:value="${member.bal}" readonly />
+	
+
+					<!-- 送出訂單按鈕 -->
+					<button type="submit">送出訂單</button>
+				</form>
+			</div>
+		</div>
+
+
+	</main>
+
+	<footer>
+		<p>Copyright &copy; 2024 ServPET 寵寵唯蹟 All Rights Reserved.</p>
+	</footer>
+
+	
+	
+	<script type="text/javascript">
+		const select = document.querySelector("#svcName");
+		select.addEventListener("change",async function(){
+			console.log(select.value);
+			const res = await fetch("",)
+		})
+	</script>
+	
+	<script >
+	
+	function updatePrice() {
+	    // 獲取選定的選項
+	    const serviceSelect = document.getElementById("service");
+	    const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+	    
+	    // 獲取選項中的價格
+	    const price = selectedOption.getAttribute("data-price");
+	    
+	    // 更新價格欄位
+	    document.getElementById("svcPrice").value = `NT$ ${price}`;
+	}
+
+	</script>
+	
+
+
+</body>
+</html>
+
+
+<!-- 					服務項目選擇 -->
+<!-- 					<label for="svcName">選擇服務項目:</label>  -->
+<!-- 					<select id="svcName" -->
+<!-- 						name="svcId" required> -->
+<!-- 						<option value="" selected disabled>請選擇服務項目</option> -->
+<!-- 						<option th:each="entry : ${groupedServices}" -->
+<!-- 							th:value="${entry.key}" th:text="${entry.key}"></option> -->
+<!-- 					</select> -->
+
+
+<!-- 					適用體型選擇 -->
+<!-- 					<label for="svcType">選擇服務項目適用體型:</label> <select id="svcType" -->
+<!-- 						name="svcType" disabled required> -->
+<!-- 						<option value="" selected disabled>請先選擇服務項目</option> -->
+<!-- 					</select> -->

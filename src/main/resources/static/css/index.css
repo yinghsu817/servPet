@@ -1,0 +1,183 @@
+@charset "UTF-8";
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+
+header {
+    background-color:#778899;
+    height: 80px;
+    width: 100%;
+    position: sticky;
+}
+
+h1{
+    color: antiquewhite;
+    position: absolute;
+    left: 25px;
+    top: 0;
+    line-height: 80px;
+
+}
+header ul{
+    position: absolute;
+    right: 5vw;
+    top: 0;
+    line-height: 80px;
+}
+header li{
+    display: inline;
+    margin-right: 4vw; 
+    /* 視窗寬度4% */
+
+}
+
+header a{
+    color:antiquewhite;
+    text-decoration: none;
+}
+
+header a:hover{
+    text-decoration: underline;
+}
+
+footer{
+    background-color:#778899;
+    color: antiquewhite;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.search{
+    background-color: rgba(119, 136, 153, 1);
+    padding: 15px;
+    display: flex; 
+    justify-content: flex-end;
+    align-items: center; 
+    height:60px;
+}
+.search input{
+    background-color: white;
+    color: darkolivegreen;
+    border: 1px solid #949d9a;
+    padding: 6px 10px;
+    border-radius: 5px;
+    margin-right: 5px; 
+   
+} 
+.search button{
+    background-color: aliceblue;
+    color: darkolivegreen;
+    border: 1px solid #949d9a;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 1px 1px 3px lightblue;
+} 
+ button:hover {
+    background-color: white; /*滑鼠懸停效果 */ 
+} 
+
+
+ input:focus{
+    outline: none;
+}
+
+.search select{
+    background-color: white; 
+    color: darkolivegreen;
+    padding: 6px 10px;
+    border: 1px solid #949d9a;
+    border-radius: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+
+
+
+/* 左右分佈區域 */
+.content-section {
+    display: flex;
+    justify-content: space-between; /* 左右平均分配 */
+    align-items: stretch; /* 垂直方向拉伸對齊 */
+    width: 100%; /* 填滿整個寬度 */
+    height: 100vh; /* 高度占滿視窗 */
+    gap: 0; /* 移除左右塊之間的間距 */
+}
+
+/* 左半塊 - 圖片區域 */
+.image-section {
+    flex: 1; /* 左右等比例分配寬度 */
+    overflow: hidden; /* 隱藏圖片超出區域的部分 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; /* 移除默認外邊距 */
+}
+
+.image-section img {
+    width: 100%; /* 圖片寬度填滿父容器 */
+    height: 100%; /* 圖片高度填滿父容器 */
+    object-fit: cover; /* 按比例填充圖片，不會變形 */
+    border-radius: 0; /* 移除圖片的圓角 */
+}
+
+/* 右半塊 - 文字與按鈕 */
+.text-section {
+    flex: 1; /* 左右等比例分配寬度 */
+    display: flex;
+    flex-direction: column; /* 垂直排列內容 */
+    justify-content: center;
+    align-items: center;
+    background-color: #D9CBCB; /* 背景色 */
+    padding: 20px;
+    border-radius: 0; /* 移除圓角 */
+    text-align: center; /* 文字居中對齊 */
+    box-shadow: none; /* 移除陰影效果 */
+}
+
+
+.text-section h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #334252;
+}
+
+.text-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #334252;
+    margin-bottom: 20px;
+}
+
+.text-section .action-btn {
+    background-color: #334252;
+    color: antiquewhite;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.text-section .action-btn:hover {
+    background-color: #556677;
+    transform: scale(1.05); /* 滑鼠懸停時放大效果 */
+}
+
+
+
+
+
+
