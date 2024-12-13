@@ -7,7 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ServPET</title>
 <link rel="stylesheet" href="/css/pg/updatePgDetail.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 	<header>
@@ -44,15 +45,13 @@
 	</header>
 
 
-
-
 	<main>
 
 		<div class="view">
 			<!-- 返回按鈕 -->
 			<div class="return-button">
-				<a href="javascript:history.back()"> <img
-					th:src="@{/images/paw.png}">
+				<a href="javascript:history.back()"> 
+				<img th:src="@{/images/paw.png}">
 				</a>
 
 			</div>
@@ -62,19 +61,6 @@
 				<img th:src="@{/pg/profileimg(pgId=${pgVO.pgId})}"
 					th:alt="${pgVO.pgName + ' 的生活照'}">
 			</div>
-
-
-			<!-- 自定義的按鈕 -->
-			<!-- 			<div class="profile-pic-button" -->
-			<!-- 				onclick="document.getElementById('fileInput').click()" -->
-			<!-- 				style="cursor: pointer;"> -->
-			<!-- 				<img th:src="@{/images/paw.png}" alt="選擇檔案" width="30px" /> -->
-			<!-- 			</div> -->
-
-
-
-
-
 
 			<div>
 				<!-- 美容師資料更新表單 -->
@@ -109,8 +95,6 @@
 					<label for="reportTimes">違規記點:</label> <input type="text"
 						id="reportTimes" name="reportTimes" th:value="${pgVO.reportTimes}"
 						readonly>
-
-
 
 					<!-- 營業狀態 -->
 					<label for="pgStatus">營業狀態:</label> <select id="pgStatus"
@@ -175,8 +159,6 @@
 
 					</div>
 
-
-
 					<!-- 簡介 -->
 					<label for="pgBio">簡介:</label>
 					<textarea id="pgBio" name="pgBio" rows="4" th:text="${pgVO.pgBio}"></textarea>
@@ -201,23 +183,23 @@
 				</form>
 				<br>
 
-				<div class="gallery">
-					<div th:if="${picId != null and !picId.isEmpty()}">
-						<div th:each="picId : ${picId}" class="gallery-item">
-							<form th:action="@{/pg/deletePicture}" method="get">
-								<input type="hidden" name="picId" th:value="${picId}" /> <input
-									type="hidden" name="pgId" th:value="${pgVO.pgId}" /> <a
-									href="javascript:void(0);" onclick="confirmAndSubmit(this);">
-									<img th:src="@{'/pg/picture/' + ${picId}}" alt="作品圖片">
-								</a>
-							</form>
-						</div>
-					</div>
-					<div th:if="${picId == null || picId.isEmpty()}">
-						<p class="no-images">無圖片可顯示。</p>
-					</div>
-				</div>
 
+					<div class="gallery">
+					    <div th:if="${picId != null and !picId.isEmpty()}">
+					        <div th:each="picId : ${picId}" class="gallery-item">
+					            <form th:action="@{/pg/deletePicture}" method="get">
+					                <input type="hidden" name="picId" th:value="${picId}" />
+					                <input type="hidden" name="pgId" th:value="${pgVO.pgId}" />
+					                <a href="javascript:void(0);" onclick="confirmAndSubmit(this);">
+					                    <img th:src="@{'/pg/picture/' + ${picId}}" alt="作品圖片">
+					                </a>
+					            </form>
+					        </div>
+					    </div>
+					    <div th:if="${picId == null || picId.isEmpty()}">
+					        <p class="no-images">無圖片可顯示。</p>
+					    </div>
+					</div>
 
 			</div>
 
@@ -232,6 +214,22 @@
 
 
 	<script>
+	// 防止未選取圖片時提交
+	document.addEventListener('DOMContentLoaded', function () {
+		const form = document.getElementById('uploadPgPic');
+		form.addEventListener('submit', function (event) {
+			const fileInput = form.querySelector('input[type="file"]');
+			if (!fileInput.files.length) {
+				event.preventDefault(); // 阻止表單提交
+				Swal.fire({
+					title: '提示',
+					text: '請至少新增一張照片！',
+					icon: 'warning',
+					confirmButtonText: '確定'
+				});
+			}
+		});
+	});
 	
     // 找到密碼欄位和眼睛圖示按鈕
     const passwordField = document.getElementById('pgPw');
@@ -249,20 +247,27 @@
         }
     });
     
-
-  
     function confirmAndSubmit(anchor) {
-        if (confirm("確定要刪除此圖片嗎？")) {
-            anchor.closest('form').submit();
-        }
+        Swal.fire({
+            title: '確定要刪除此圖片嗎？',
+            text: "此操作無法恢復！",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '確定',
+            cancelButtonText: '取消'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 提交表單
+                anchor.closest('form').submit();
+            }
+        });
     }
-    
-    
+  
+  
    
 </script>
-
-
-
 
 </body>
 </html>

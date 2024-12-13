@@ -213,9 +213,36 @@ td a {
 	background-color: #555;
 }
 
-.btn-cancel {
+.btn-delete {
 	background-color: #e74c3c;
 }
+
+.bulk-action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.btn-show-all, .btn-hide-all {
+    background-color: #004000; /* 綠色背景 */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-hide-all {
+    background-color: #800000; /* 紅色背景 */
+}
+
+.btn-show-all:hover, .btn-hide-all:hover {
+    opacity: 0.9;
+}
+
 
 /* 作品集區域樣式 */
 /* .gallery { */

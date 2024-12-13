@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,6 +40,7 @@ public class PgOrderVO implements java.io.Serializable {
 
 	@Column(name = "BOOKING_DATE", nullable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull(message = "請選擇要預約的日期")
 	private LocalDate bookingDate;
 
 	@Column(name = "BOOKING_TIME", nullable = false)

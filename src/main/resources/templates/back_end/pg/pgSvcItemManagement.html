@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ServPET</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script
 	src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
@@ -68,6 +70,19 @@
 
 	<main>
 		<div class="view">
+			<div class="bulk-action-buttons">
+			    <!-- 一鍵顯示所有項目 -->
+			    <form th:action="@{/pg/updateAllPgSvcItemStatus}" method="post" class="bulk-action-form">
+			        <input type="hidden" name="svcIsDeleted" value="1">
+			        <button type="submit" class="btn btn-show-all">顯示全部</button>
+			    </form>
+			
+			    <!-- 一鍵隱藏所有項目 -->
+			    <form th:action="@{/pg/updateAllPgSvcItemStatus}" method="post" class="bulk-action-form">
+			        <input type="hidden" name="svcIsDeleted" value="0">
+			        <button type="submit" class="btn btn-hide-all">隱藏全部</button>
+			    </form>
+			</div>
 			
 			<table id="example">
 				<thead>
@@ -95,8 +110,6 @@
 						    <!-- 狀態顯示，根據 svcIsDeleted 判斷 -->
 						    <span th:text="${item.svcIsDeleted.equals('1') ? '顯示' : '隱藏'}"></span>
 							</td>
-					<!-- <td> 漂亮按鈕-->
-					<!-- <a href="javascript:void(0);" class="btn btn-danger btn-cancel" data-svcid="${item.svcId}">刪除</a> -->
 						
 						<!-- 醜陋按鈕 -->
 
@@ -114,7 +127,7 @@
 					</td>
 					<!-- 刪除按鈕 -->
 				    <td>
-				    <a th:href="@{/pg/deletePgSvcItem(svcId=${item.svcId})}" class="btn btn-edit">刪除</a>
+				    <a th:href="@{/pg/deletePgSvcItem(svcId=${item.svcId})}" class="btn btn-delete">刪除</a>
 					</td>
 				
 					
@@ -143,6 +156,53 @@
 		<p>Copyright &copy; 2024 ServPET 寵寵唯蹟 All Rights Reserved.</p>
 	</footer>
 	
+<script>
+//監聽所有刪除按鈕的點擊事件
+document.addEventListener('click', function (event) {
+    if (event.target && event.target.classList.contains('btn-delete')) {
+        event.preventDefault(); // 阻止默認的跳轉行為
+
+        const deleteUrl = event.target.getAttribute('href'); // 取得刪除的 URL
+        Swal.fire({
+            title: '確認刪除？',
+            text: '刪除後無法復原，您確定要刪除嗎？',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '確定',
+            cancelButtonText: '取消'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = deleteUrl; // 如果用戶確認，跳轉到刪除的 URL
+            }
+        });
+    }
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bulkActionForms = document.querySelectorAll('.bulk-action-form');
+
+        bulkActionForms.forEach(form => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // 阻止表單的默認提交行為
+                const actionType = form.querySelector('input[name="svcIsDeleted"]').value === '0' ? '隱藏' : '顯示';
+                Swal.fire({
+                    title: `確認要${actionType}所有服務項目嗎？`,
+                    text: '這個操作會更改所有服務項目的顯示狀態！',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '確認',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // 提交表單
+                    }
+                });
+            });
+        });
+    });
+</script>
 
 	
 	

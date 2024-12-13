@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ServPET</title>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link rel="stylesheet" href="/css/pg/selectPage.css">
 
 </head>
@@ -25,34 +26,12 @@
 	</header>
 
 	<main>
-		<section class="search">
 
-			<div>
-				<select class="area" th:name="pgArea">
-					<option value="0" th:value="0" th:selected="${pgArea == 0}">北部</option>
-					<option value="1" th:value="1" th:selected="${pgArea == 1}">中部</option>
-					<option value="2" th:value="2" th:selected="${pgArea == 2}">南部</option>
-					<option value="3" th:value="3" th:selected="${pgArea == 3}">東部</option>
-				</select>
-
-			</div>
-
-			<form th:action="@{/pg/search}" method="get">
-				<div>
-					<select class="other" th:name="searchBy">
-						<option value="1" th:value="1">美容師ID</option>
-						<option value="2" th:value="2">美容師姓名</option>
-
-					</select> <input type="search" th:name="keyword" placeholder="請輸入美容師ID/姓名">
-					<button type="submit">Search</button>
-				</div>
-			</form>
-		</section>
 
 		<section class="view">
 			<div class="table_container">
 
-				<ul class="item_list">
+				<ul id="pgList" class="item_list">
 					<li th:each="pgVO : ${list}">
 						<div class="img_block">
 							<a th:href="@{/pg/listOnePg(pgId=${pgVO.pgId})}"
@@ -61,18 +40,20 @@
 								th:if="${pgVO.pgPic != null}"
 								th:src="@{/pg/profileimg(pgId=${pgVO.pgId})}"
 								th:alt="${pgVO.pgName}">
+							<img th:if="${pgVO.pgPic == null}" src="/images/default.jpg" alt="預設圖片">
 							</a>
 						</div> 
 						<span class="item_text" th:text="${pgVO.pgName}"></span>
 						<span class="item_text">
-							<div th:switch="${pgVO.pgArea}">
-								<div th:case="0">北部</div>
-								<div th:case="1">中部</div>
-								<div th:case="2">南部</div>
-								<div th:case="3">東部</div>
-							</div></span> 
+							  <div th:switch="${pgVO.pgArea}">
+							      <span th:case="0">北部</span>
+							      <span th:case="1">中部</span>
+							      <span th:case="2">南部</span>
+							      <span th:case="3">東部</span>
+							  </div>
+						</span> 
 						<span th:if="${pgVO.pgPic == null}">尚無圖片</span>
-						<!-- 新增星等顯示 -->
+
 			            <span class="item_text">
 			                <span th:if="${starDisplayMap[pgVO.pgId] != ''}" 
 			                      th:text="${starDisplayMap[pgVO.pgId]}"></span>
@@ -88,5 +69,7 @@
 	<footer>
 		<p>Copyright &copy; 2024 ServPET 寵寵唯蹟 All Rights Reserved.</p>
 	</footer>
+	
+
 </body>
 </html>

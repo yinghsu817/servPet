@@ -21,17 +21,18 @@ public class PgOrderService {
 	private PgOrderRepository pgOrderRepository;
 	
 	// 每天凌晨執行一次修改訂單狀態
-//    @Scheduled(cron = "0 0 0 * * ?")
-//    public void updateBookingStatus() {
-//        Date today = Date.valueOf(LocalDate.now());
-//        Date yesterday = Date.valueOf(LocalDate.now().minusDays(1));
-//
-//        // 更新為"進行中"
-//        pgOrderRepository.updateBookingStatusToInProgress(today);
-//
-//        // 更新為"已完成"
-//        pgOrderRepository.updateBookingStatusToCompleted(yesterday);
-//    }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void updateBookingStatus() {
+    	
+        Date today = Date.valueOf(LocalDate.now());
+        Date yesterday = Date.valueOf(LocalDate.now().minusDays(1));
+
+        // 更新為"進行中"
+        pgOrderRepository.updateBookingStatusToInProgress(today);
+
+        // 更新為"已完成"
+        pgOrderRepository.updateBookingStatusToCompleted(yesterday);
+    }
 	
 
 	public boolean isSlotAvailable(Integer pgId, Date bookingDate, String bookingTime) {
@@ -114,6 +115,7 @@ public class PgOrderService {
 			pgOrderDTO.setPetType((String) o[2]);
 			pgOrderDTO.setPetImg(o[3] != null ? (byte[]) o[3] : null);
 			pgOrderDTO.setSvcName((String) o[4]);
+			pgOrderDTO.setSvcType((String) o[5]);
 		}
 
 		return pgOrderDTO; // 如果找不到其他信息則返回 null

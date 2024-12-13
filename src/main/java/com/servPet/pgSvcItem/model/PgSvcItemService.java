@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PgSvcItemService {
@@ -60,6 +61,12 @@ public class PgSvcItemService {
 		return list;
 	}
 
+	// 一次更新服務項目(顯示/隱藏)
+	@Transactional
+	public void updateAllSvcItemStatus(String svcIsDeleted) {
+	    pgSvcItemRepository.updateAllSvcItemStatus(svcIsDeleted);
+	    }
+	    
 	// 更新服務項目狀態(顯示/隱藏)
 	public void updateSvcItemStatus(Integer svcId, String svcIsDeleted) {
 		PgSvcItemVO item = pgSvcItemRepository.findById(svcId)

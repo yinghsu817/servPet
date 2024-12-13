@@ -32,8 +32,9 @@
 				<li><a href="#" th:href="@{/pg/listOnePg_back(pgId=${pgVO.pgId})}">美容師資料管理</a></li>
 				<li><a href="#" th:href="@{/pg/pgSvcListManagement(pgId=${pgVO.pgId})}">美容師服務項目管理</a></li>
 				<li><a href="#" th:href="@{/pg/pgOrderManagement(pgId=${pgVO.pgId})}">美容師訂單管理</a></li>
-				<li><a href="#" th:if="${pgVO == null}" th:href="@{/back_end/topgLogin}">登入</a></li>
-				<li><a href="#" th:if="${pgVO != null}" th:href="@{/back_end/logout}">登出</a></li>
+				<li><a th:if="${pgVO == null}" th:href="@{/back_end/toAdminLogin}">登入</a></li>
+				<li><a th:if="${pgVO != null}" th:href="@{/back_end/logout}">登出</a></li>
+				
 
 				
 			</ul>
@@ -55,7 +56,7 @@
 			</div>
 			<!-- 美容師詳細資料 -->
 			<table class="profile">
-			<form method="post" th:action="@{/pg/getOne_For_Update(pgId=${pgVO.pgId})}" style="margin-bottom: 0px;">
+			<form method="get" th:action="@{/pg/getOne_For_Update(pgId=${pgVO.pgId})}" style="margin-bottom: 0px;">
 			    <input type="hidden" name="pgId" th:value="${pgVO.pgId}">
 			    <button type="submit" class="btn btn-edit">編輯</button>	   
 			</form>
@@ -161,17 +162,29 @@
 
 
 
+					<!-- 照片跑馬燈 -->
+				    <div class="carousel-container">
+				        <button class="carousel-btn prev-btn">&#9664;</button>
+				        <div class="carousel-wrapper">
+				            <div class="carousel">
+				                <div th:each="picId : ${picId}" class="carousel-item">
+				                    <img th:src="@{'/pg/picture/' + ${picId}}" alt="作品照片">
+				                </div>
+				            </div>
+				        </div>
+				        <button class="carousel-btn next-btn">&#9654;</button>
+				    </div>
 			
-			<div class="gallery">
-			<div th:if="${picId != null and !picId.isEmpty()}">
-				<div th:each="picId : ${picId}" class="gallery-item">
-				<img th:src="@{'/pg/picture/' + ${picId}}" alt="作品圖片"></div>
-			</div>
+<!-- 			<div class="gallery"> -->
+<!-- 			<div th:if="${picId != null and !picId.isEmpty()}"> -->
+<!-- 				<div th:each="picId : ${picId}" class="gallery-item"> -->
+<!-- 				<img th:src="@{'/pg/picture/' + ${picId}}" alt="作品圖片"></div> -->
+<!-- 			</div> -->
 			
-			<div th:if="${picId == null || picId.isEmpty()}">
-				<p class="no-images">無圖片可顯示。</p>
-			</div>
-			</div>
+<!-- 			<div th:if="${picId == null || picId.isEmpty()}"> -->
+<!-- 				<p class="no-images">無圖片可顯示。</p> -->
+<!-- 			</div> -->
+<!-- 			</div> -->
 			
 
 			</div>
@@ -199,14 +212,94 @@
 	<footer>
 		<p>Copyright &copy; 2024 ServPET 寵寵唯蹟 All Rights Reserved.</p>
 	</footer>
+	<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const carousel = document.querySelector(".carousel");
+            const prevBtn = document.querySelector(".prev-btn");
+            const nextBtn = document.querySelector(".next-btn");
+            const items = document.querySelectorAll(".carousel-item");
+
+            const visibleItems = 5; // 一次顯示五張圖片
+            const itemWidth = items[0].offsetWidth + 10; // 每個項目寬度（包含間距）
+            let currentIndex = visibleItems; // 初始化到第一個真實項目
+            let autoPlay;
+
+            // 克隆首尾項目來實現無縫循環
+            const cloneItems = () => {
+                const firstItems = Array.from(items).slice(0, visibleItems);
+                const lastItems = Array.from(items).slice(-visibleItems);
+
+                firstItems.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    carousel.appendChild(clone);
+                });
+
+                lastItems.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    carousel.insertBefore(clone, carousel.firstChild);
+                });
+            };
+
+            // 初始化克隆和偏移
+            const initCarousel = () => {
+                cloneItems();
+                const offset = -(currentIndex * itemWidth);
+                carousel.style.transform = `translateX(${offset}px)`;
+            };
+
+            // 更新跑馬燈的偏移
+            const updateCarousel = () => {
+                const offset = -(currentIndex * itemWidth);
+                carousel.style.transition = "transform 0.8s ease-in-out";
+                carousel.style.transform = `translateX(${offset}px)`;
+
+                // 無縫切換處理
+                carousel.addEventListener("transitionend", () => {
+                    if (currentIndex === 0) {
+                        currentIndex = items.length; // 跳到真實的最後一張
+                        carousel.style.transition = "none"; // 瞬間重置
+                        carousel.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+                    } else if (currentIndex === items.length + visibleItems) {
+                        currentIndex = visibleItems; // 跳到真實的第一張
+                        carousel.style.transition = "none"; // 瞬間重置
+                        carousel.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+                    }
+                });
+            };
+
+            // 自動播放
+            const startAutoPlay = () => {
+                stopAutoPlay(); // 確保不會有重複的定時器
+                autoPlay = setInterval(() => {
+                    currentIndex++;
+                    updateCarousel();
+                }, 3000); // 每 3 秒切換一張
+            };
+
+            const stopAutoPlay = () => {
+                clearInterval(autoPlay);
+            };
+
+            // 左右按鈕
+            prevBtn.addEventListener("click", () => {
+                stopAutoPlay();
+                currentIndex--;
+                updateCarousel();
+                startAutoPlay();
+            });
+
+            nextBtn.addEventListener("click", () => {
+                stopAutoPlay();
+                currentIndex++;
+                updateCarousel();
+                startAutoPlay();
+            });
+
+            // 初始化
+            initCarousel();
+            startAutoPlay();
+        });
+    </script>
 </body>
 </html>
 
-
-			<!-- 新增作品集按鈕 移到美容師個人管理頁面-->
-<!-- 			<form id="uploadForm" -->
-<!-- 				th:action="@{/pg/uploadpicture/{pgId}(pgId=${pgVO.pgId})}" -->
-<!-- 				method="post" enctype="multipart/form-data"> -->
-<!-- 				<input type="file" name="pictures" multiple accept="image/*"> -->
-<!-- 				<button type="submit">新增照片</button> -->
-<!-- 			</form> -->

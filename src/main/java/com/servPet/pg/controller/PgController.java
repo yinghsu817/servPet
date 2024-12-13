@@ -3,6 +3,7 @@ package com.servPet.pg.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,7 +41,6 @@ import com.servPet.pgPic.model.PgPicRepository;
 import com.servPet.pgPic.model.PgPicService;
 import com.servPet.pgSvc.model.PgServiceDetailsDTO;
 import com.servPet.pgSvc.model.PgSvcService;
-import com.servPet.pgSvcItem.model.PgSvcItemVO;
 
 @Controller
 @RequestMapping("/pg")
@@ -96,8 +97,7 @@ public class PgController {
 		}
 
 		model.addAttribute("pgVO", pgVO);
-		model.addAttribute("getOne_For_Display", "true"); // 旗標getOne_For_Display見select_page.html的第156行
-															// -->
+		model.addAttribute("getOne_For_Display", "true"); 
 
 		List<Integer> picId = pgPicRepository.getPictureIdsByPgId(pgId);
 		byte[] picture = pgPicSvc.getPictureById(pgId);
@@ -125,7 +125,7 @@ public class PgController {
 	}
 
 	// 獲取待修改美容師個人資訊
-	@PostMapping("/getOne_For_Update")
+	@GetMapping("/getOne_For_Update")
 	public String getOne_For_Update(@RequestParam("pgId") Integer pgId, ModelMap model, HttpSession session) {
 		SaveSession(model, session);
 		PgVO pgVO = pgSvc.getOnePg(Integer.valueOf(pgId));
@@ -135,6 +135,8 @@ public class PgController {
 		model.addAttribute("picId", picId);
 		model.addAttribute("picture", picture);
 		model.addAttribute("pgVO", pgVO);
+		model.addAttribute("pgId", pgId);
+		
 		return "back_end/pg/updatePgDetail";
 	}
 
@@ -181,7 +183,7 @@ public class PgController {
 		pgVO.setSchTime(new String(schTime));
 
 		pgSvc.updatePg(pgVO);
-		return "redirect:/pg/listOnePg_back?pgId=" + pgVO.getPgId();
+		return "redirect:/pg/getOne_For_Update?pgId=" + pgVO.getPgId();
 	}
 
 	// 瀏覽所有美容師
@@ -190,29 +192,37 @@ public class PgController {
 		SaveSession(model, session);
 		// 獲取所有美容師資料
 	    List<PgVO> pgList = pgSvc.getAllOnDuty();
-	    // 計算平均星等並生成星號字符串
-	    Map<Integer, String> starDisplayMap = pgList.stream().collect(Collectors.toMap(
-	        PgVO::getPgId,
-	        pg -> {
-	            int averageStars = (pg.getRatingTimes() == null || pg.getRatingTimes() == 0)
-	                ? 0
-	                : (int) Math.round((double) pg.getTotalStars() / pg.getRatingTimes());
-	            return "⭐".repeat(averageStars);
+	    
+	 // 計算平均星等並生成星號字符串
+	    Map<Integer, String> starDisplayMap = new HashMap<>();
+	    for (PgVO pg : pgList) {
+	        Integer pgId = pg.getPgId();
+	        int averageStars;
+
+	        // 計算平均星等
+	        if (pg.getRatingTimes() == null || pg.getRatingTimes() == 0) {
+	            averageStars = 0; // 無評價時星等設置為 0
+	        } else {
+	            averageStars = (int) Math.round((double) pg.getTotalStars() / pg.getRatingTimes());
 	        }
-	    ));
+
+	        // 生成星號字符串
+	        StringBuilder stars = new StringBuilder();
+	        for (int i = 0; i < Math.max(0, averageStars); i++) {
+	            stars.append("⭐");
+	        }
+
+	        starDisplayMap.put(pgId, stars.toString());
+	    }
+
 	    
 	    model.addAttribute("list", pgList);
 	    model.addAttribute("starDisplayMap", starDisplayMap);
-		return "front_end/pg/select_pg_page"; // Thymeleaf 頁面名稱
+		return "front_end/pg/select_pg_page"; 
 	}
 	
-//	// 瀏覽所有"已顯示"美容師服務項目
-//		@GetMapping("/showAllPgSvcItem")
-//		public String listAllPgSvcItem(ModelMap model) {
-//			List<PgSvcItemVO> visibleItems = pgSvcItemSvc.getAllVisible();
-//			model.addAttribute("list", visibleItems);
-//			return "front_end/pg/showSvcDetail"; // Thymeleaf 頁面名稱
-//		}
+
+
 
 	// 獲取美容師封面照
 	@GetMapping("/profileimg")

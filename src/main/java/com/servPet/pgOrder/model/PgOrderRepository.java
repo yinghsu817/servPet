@@ -3,6 +3,7 @@ package com.servPet.pgOrder.model;
 
 import java.math.BigInteger;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface PgOrderRepository extends JpaRepository<PgOrderVO, Integer> {
 	
+	// 查找寵物圖片
 	@Query(value = "SELECT PET_IMG FROM PET where PET_ID = ?1" , nativeQuery = true)
 	byte[] findPetImgById(@Param("petId") Integer petId);
 	
@@ -45,7 +47,7 @@ public interface PgOrderRepository extends JpaRepository<PgOrderVO, Integer> {
 	List<Object[]> findBookedSlots(@Param("pgId") Integer pgId);
 
 	// 根據訂單 ID 查詢訂單詳情，包含會員和寵物的其他信息
-	@Query(value = "SELECT m.MEB_NAME, p.PET_NAME, p.PET_TYPE, p.PET_IMG, i.SVC_NAME " + "FROM PET_GROOMER_ORDER o "
+	@Query(value = "SELECT m.MEB_NAME, p.PET_NAME, p.PET_TYPE, p.PET_IMG, i.SVC_NAME,s.SVC_TYPE " + "FROM PET_GROOMER_ORDER o "
 			+ "JOIN MEMBER m ON o.MEB_ID = m.MEB_ID " + "JOIN PET p ON o.PET_ID = p.PET_ID AND o.MEB_ID = p.MEB_ID "
 			+ "JOIN PET_GROOMER_SERVICE s ON o.PGSVC_ID = s.PGSVC_ID "
 			+ "JOIN PET_GROOMER_SERVICE_ITEM i ON s.SVC_ID = i.SVC_ID " + "WHERE o.PGO_ID = ?1", nativeQuery = true)

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.servPet.pg.model.PgVO;
 import com.servPet.pgSvcItem.model.PgSvcItemService;
@@ -102,6 +103,15 @@ public class PgSvcItemController {
 		pgSvcItemSvc.updatePgSvcItem(pgSvcItemVO);
 		return "redirect:/pg/listRealAllPgSvcItem"; // 保存後重定向到列表頁面
 	}
+	
+	@PostMapping("/updateAllPgSvcItemStatus")
+	public String updateAllPgSvcItemStatus(@RequestParam("svcIsDeleted") String svcIsDeleted) {
+	    // 調用服務層批量更新服務項目狀態
+	    pgSvcItemSvc.updateAllSvcItemStatus(svcIsDeleted);
+	    // 重定向回管理頁面
+	    return "redirect:/pg/listRealAllPgSvcItem";
+	}
+
 
 	// 調整服務項目(顯示/隱藏)
 	@PostMapping("/updatePgSvcItemStatus")
@@ -113,7 +123,7 @@ public class PgSvcItemController {
 		return "redirect:/pg/listRealAllPgSvcItem";
 	}
 
-	// 新增
+	// 導向新增表單
 	@GetMapping("/addPgSvcItem")
 	public String createPgSvcItemForm(ModelMap model) {
 		model.addAttribute("pgSvcItemVO", new PgSvcItemVO());
@@ -122,16 +132,20 @@ public class PgSvcItemController {
 
 	// 新增-處理表單提交
 	@PostMapping("/createPgSvcItem")
-	public String CreatePgSvcItem(@Valid PgSvcItemVO pgSvcItemVO, BindingResult result, ModelMap model) {
-		if (result.hasErrors()) {
-			return "back_end/pg/addPgSvcItem"; // 返回表單頁面，顯示驗證錯誤
-		}
+	public String createPgSvcItem(@Valid PgSvcItemVO pgSvcItemVO, BindingResult result, 
+			RedirectAttributes redirectAttributes) {
+	    if (result.hasErrors()) {
+	        return "back_end/pg/addPgSvcItem"; // 返回表單頁面，顯示驗證錯誤
+	    }
 
-		// 保存到資料庫
-		pgSvcItemSvc.createPgSvcItem(pgSvcItemVO);
-		model.addAttribute("successMessage", "美容師服務項目新增成功！");
-		return "redirect:/pg/listRealAllPgSvcItem"; // 重定向到列表頁
-
+	    // 保存到資料庫
+	    pgSvcItemSvc.createPgSvcItem(pgSvcItemVO);
+	    
+	    // 使用 RedirectAttributes 傳遞成功消息
+	    redirectAttributes.addFlashAttribute("successMessage", "美容師服務項目新增成功！");
+	    
+	    // 重定向到列表頁，這時 successMessage 會被保存到 session 中，頁面重載後依然可用
+	    return "redirect:/pg/listRealAllPgSvcItem";
 	}
 
 	// 瀏覽所有美容師服務項目(含隱藏中)
@@ -143,28 +157,4 @@ public class PgSvcItemController {
 
 }
 
-////瀏覽所有"已顯示"美容師服務項目
-//@GetMapping("/showAllPgSvcItem")
-//public String listAllPgSvcItem(ModelMap model) {
-//	model.addAttribute("list", pgSvcItemSvc.getAllVisible());
-//	return "back_end/pg/showPgSvcItem"; // Thymeleaf 頁面名稱
-//}
 
-//// 假刪除真隱藏
-//@PostMapping("/deletePgSvcItem")
-//public String delete(@RequestParam("svcId") Integer svcId, ModelMap model) {
-//
-//	pgSvcItemSvc.deletePgSvcItemById(Integer.valueOf(svcId));
-//
-//	List<PgSvcItemVO> list = pgSvcItemSvc.getRealAll();
-//	model.addAttribute("list", list);
-//	model.addAttribute("success", "- (隱藏成功)");
-//	return "redirect:/pg/listRealAllPgSvcItem";
-//}
-
-//// 瀏覽所有"已顯示"美容師服務項目
-//@GetMapping("/listAllPgSvcItem")
-//public String listAllPgSvcItem(ModelMap model) {
-//	model.addAttribute("list", pgSvcItemSvc.getAll());
-//	return "back_end/pg/pgSvcItemManagement"; // Thymeleaf 頁面名稱
-//}

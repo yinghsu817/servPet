@@ -8,11 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.servPet.pgSvcItem.model.PgSvcItemVO;
-
 @Repository
 public interface PgRepository extends JpaRepository<PgVO, Integer> {
-
+	
 	// 查詢指定美容師的證件照(學雍)
 	@Query(value = "select pgLicenses from PgVO where pgId = :pgId")
 	 byte[] findLicensesByPgId(@Param("pgId") Integer pgId);

@@ -6,7 +6,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ServPET</title>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="/css/pg/pgAddService.css">
 
 </head>
@@ -52,7 +53,7 @@
 
 			<div>
 				<!-- 美容師資料更新表單 -->
-				<form action="/pg/addService" method="post" class="form-container">
+				<form id="pgAddSvcItem" action="/pg/addService" method="post" class="form-container">
 				
 					<!-- 選擇服務項目 -->
 			        <label for="svcName">選擇服務項目：</label>
@@ -118,6 +119,42 @@
                 window.location.href = `/pg/addService?svcName=${encodeURIComponent(svcName)}`;
             }
         }
+        
+        <!-- SweetAlert 顯示成功的消息 -->
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // 透過 Thymeleaf 獲取 successMessage
+                const successMessage = /*[[${successMessage}]]*/ 'null';
+                if (successMessage && successMessage.trim() !== 'null') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '成功',
+                        text: successMessage,
+                        confirmButtonText: '確定'
+                    });
+                }
+
+                // **表單提交事件綁定**
+                const form = document.getElementById('pgAddSvcItem');
+
+                // 監聽表單提交事件
+                form.addEventListener('submit', function (event) {
+                    event.preventDefault(); // 阻止默認提交
+                    Swal.fire({
+                        title: '確認新增？',
+                        text: '確定要新增此服務項目嗎？',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: '確定',
+                        cancelButtonText: '取消'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // 當用戶點擊「確定」後，提交表單
+                        }
+                    });
+                });
+            });
+
     </script>
 
 </body>

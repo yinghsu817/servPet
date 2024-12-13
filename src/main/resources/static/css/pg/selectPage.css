@@ -54,52 +54,48 @@ footer{
     font-size: 14px;
 }
 
-.search{
-	height:60px;
+.search {
+    height: 60px;
     background-color: rgba(119, 136, 153, 1);
     padding: 15px;
     display: flex; 
-    justify-content: flex-end;
-    align-items: center; 
-}
-.search input{
-    background-color: white;
-    color: darkolivegreen;
-    border: 1px solid #949d9a;
-    padding: 6px 10px;
-    border-radius: 5px;
-    margin-right: 5px; 
-   
-} 
-.search button{
-    background-color: aliceblue;
-    color: darkolivegreen;
-    border: 1px solid #949d9a;
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    box-shadow: 1px 1px 3px lightblue;
-} 
- button:hover {
-    background-color: white; /*滑鼠懸停效果 */ 
-} 
-
-
- input:focus{
-    outline: none;
+    justify-content: flex-end; /* 搜尋框靠右 */
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 元素間的水平間距 */
+    flex-wrap: nowrap; /* 防止內容換行 */
 }
 
-.search select{
+.search form {
+    display: flex; /* 讓表單內元素水平排列 */
+    align-items: center; /* 垂直居中 */
+    gap: 10px; /* 表單內元素間距 */
+    width: auto; /* 防止表單撐滿 */
+}
+
+.search select,
+.search input,
+.search button {
     background-color: white; 
     color: darkolivegreen;
     padding: 6px 10px;
     border: 1px solid #949d9a;
     border-radius: 5px;
-    margin-right: 5px;
     cursor: pointer;
     transition: background-color 0.3s; 
+    margin: 0; /* 清除可能的垂直間距 */
 }
+
+.search input {
+    width: 200px; /* 設置輸入框寬度 */
+}
+
+.search select:hover,
+.search input:hover,
+.search button:hover {
+    background-color: #f0f8ff; /* 滑鼠懸停時的背景顏色 */
+    box-shadow: 2px 2px 5px lightblue;
+}
+
 
 .view{
     background-color: #334252;

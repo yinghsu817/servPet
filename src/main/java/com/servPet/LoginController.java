@@ -127,12 +127,12 @@ public class LoginController {
         return "back_end/pg/listOnePg"; // 返回模板
     }
 
-    // 處理登出請求
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {	
-        session.invalidate(); // 注銷用戶
-        return "redirect:/back_end/login"; // 重定向到登入頁面
-    }
+    	// 處理登出請求
+        @GetMapping("/logout")
+        public String logout(HttpSession session) {	
+            session.invalidate(); // 注銷用戶
+            return "redirect:/back_end/login"; // 重定向到登入頁面
+        }
     
     
 }

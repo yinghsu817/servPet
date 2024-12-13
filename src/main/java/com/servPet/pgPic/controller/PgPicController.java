@@ -43,7 +43,7 @@ public class PgPicController {
 		}
 		// 重定向回美容師詳細頁面
 
-		return "redirect:/pg/listOnePg_back?pgId=" + pgId;
+		return "redirect:/pg/getOne_For_Update?pgId=" + pgId;
 	}
 
 	// 處理多張作品集上傳
@@ -55,9 +55,9 @@ public class PgPicController {
 				pictures.add(file.getBytes());
 			}
 			pgPicSvc.savePictures(pgId, pictures);
-			return "redirect:/pg/listOnePg_back?pgId=" + pgId;
+			return "redirect:/pg/getOne_For_Update?pgId=" + pgId;
 		} catch (IOException e) {
-			return "redirect:/pg/listOnePg_back?pgId=" + pgId;
+			return "redirect:/pg/getOne_For_Update?pgId=" + pgId;
 		}
 	}
 

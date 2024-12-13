@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.servPet.pgPic.model.PgPicRepository;
 import com.servPet.pgPic.model.PgPicService;
-import com.servPet.pgSvcItem.model.PgSvcItemVO;
 
 //import hibernate.util.CompositeQuery.HibernateUtil_CompositeQuery;
 
@@ -23,6 +22,8 @@ public class PgService {
 
 	@Autowired
 	PgPicService pgPicSvc;
+
+
 
 	// 修改
 	public void updatePg(PgVO pgVO) {
@@ -40,18 +41,18 @@ public class PgService {
 		List<PgVO> list = pgRepository.findAll();
 		return list;
 	}
-	
+
 	// 查看"營業中"的所有美容師
-		public List<PgVO> getAllOnDuty() {
-			return pgRepository.findByPgStatus("1"); 
-		}
+	public List<PgVO> getAllOnDuty() {
+		return pgRepository.findByPgStatus("1");
+	}
 
 	// 根據美容師姓名查詢
 	public List<PgVO> getOnePg(String pgName) {
 		return pgRepository.findByNameLikeOrderByPgId(pgName);
 	}
 
-	// 管理員登錄
+	// 管理員登錄(學雍
 	public PgVO login(Integer integer, String pgPw) {
 		PgVO pg = pgRepository.findByPgId(integer);
 		if (pg != null && pgPw.equals(pg.getPgPw())) { // 直接比對密碼
